@@ -1,1 +1,2 @@
 # To-do-list-app-using-HTMX-JavaScript-and-SQLite
+A simple to-do list app using HTMX, JavaScript, and SQLite without any additional backend framework. The main idea here is to use HTMX for page interactions and JavaScript for fetching and interacting with the database through HTML forms.

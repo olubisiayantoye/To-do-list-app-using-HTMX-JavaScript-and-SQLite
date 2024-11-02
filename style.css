@@ -1,16 +1,46 @@
 body {
     font-family: Arial, sans-serif;
     margin: 2em;
+    color: #333;
 }
 
-li {
+h1 {
+    color: #007bff;
+}
+
+form {
     display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
     align-items: center;
-    margin-bottom: 0.5em;
 }
 
-span {
-    flex: 1;
+input[type="text"], input[type="date"], select, button {
+    padding: 0.5em;
+    font-size: 1em;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+    font-size: 1em;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 0.75em;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
 }
 
 .done {
@@ -18,12 +48,36 @@ span {
     color: gray;
 }
 
-form {
-    display: flex;
-    gap: 0.5em;
-    margin-bottom: 1em;
+.progress-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    overflow: hidden;
 }
 
-select, input[type="date"], input[type="text"], button {
+.progress-bar {
+    height: 10px;
+    background-color: #28a745;
+    width: 0%;
+}
+
+button {
     padding: 0.5em;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-right: 0.3em;
+    border: none;
+    color: #fff;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:nth-of-type(1) { /* Toggle button */
+    background-color: #28a745;
+}
+
+button:nth-of-type(2) { /* Delete button */
+    background-color: #dc3545;
 }

@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 2em;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+}
+
+span {
+    flex: 1;
+}
+
+.done {
+    text-decoration: line-through;
+    color: gray;
+}
+
+form {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
+}
+
+select, input[type="date"], input[type="text"], button {
+    padding: 0.5em;
+}

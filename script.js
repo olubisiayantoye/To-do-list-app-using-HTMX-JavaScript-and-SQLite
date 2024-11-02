@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const dbRequest = indexedDB.open("TodoDB", 1);
+    const dbRequest = indexedDB.open("EnhancedTodoDB", 1);
     let db;
 
     dbRequest.onupgradeneeded = (e) => {
         db = e.target.result;
-        db.createObjectStore("todos", { keyPath: "id", autoIncrement: true });
+        const todoStore = db.createObjectStore("todos", { keyPath: "id", autoIncrement: true });
+        todoStore.createIndex("category", "category", { unique: false });
+
+        db.createObjectStore("subtasks", { keyPath: "id", autoIncrement: true });
     };
 
     dbRequest.onsuccess = (e) => {
@@ -18,16 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("add-form").addEventListener("submit", (e) => {
         e.preventDefault();
-        const taskInput = document.getElementById("new-task");
-        const task = taskInput.value.trim();
+        const task = document.getElementById("new-task").value.trim();
+        const dueDate = document.getElementById("due-date").value;
+        const priority = document.getElementById("priority").value;
+        const category = document.getElementById("category").value.trim();
         if (task) {
-            addTask(task);
-            taskInput.value = "";
+            addTask({ task, due_date: dueDate, priority, category, done: false, progress: 0 });
         }
     });
 
     function loadTodos() {
-        const transaction = db.transaction(["todos"], "readonly");
+        const transaction = db.transaction("todos", "readonly");
         const store = transaction.objectStore("todos");
         const request = store.getAll();
 
@@ -41,20 +45,18 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    function addTask(task) {
-        const transaction = db.transaction(["todos"], "readwrite");
+    function addTask(todo) {
+        const transaction = db.transaction("todos", "readwrite");
         const store = transaction.objectStore("todos");
-        const newTodo = { task, done: false };
-
-        const request = store.add(newTodo);
-        request.onsuccess = () => loadTodos();
+        const request = store.add(todo);
+        request.onsuccess = loadTodos;
     }
 
     function toggleTask(id, doneStatus) {
-        const transaction = db.transaction(["todos"], "readwrite");
+        const transaction = db.transaction("todos", "readwrite");
         const store = transaction.objectStore("todos");
-
         const request = store.get(id);
+
         request.onsuccess = () => {
             const todo = request.result;
             todo.done = !doneStatus;
@@ -64,18 +66,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function deleteTask(id) {
-        const transaction = db.transaction(["todos"], "readwrite");
+        const transaction = db.transaction("todos", "readwrite");
         const store = transaction.objectStore("todos");
-
         const request = store.delete(id);
-        request.onsuccess = () => loadTodos();
+
+        request.onsuccess = loadTodos;
     }
 
     function createTodoElement(todo) {
         const li = document.createElement("li");
 
         const span = document.createElement("span");
-        span.textContent = todo.task;
+        span.textContent = `${todo.task} - Due: ${todo.due_date || "No Due Date"} - Priority: ${todo.priority} - Category: ${todo.category || "Uncategorized"}`;
         span.classList.toggle("done", todo.done);
         span.addEventListener("click", () => toggleTask(todo.id, todo.done));
 
@@ -89,3 +91,4 @@ document.addEventListener("DOMContentLoaded", () => {
         return li;
     }
 });
+
